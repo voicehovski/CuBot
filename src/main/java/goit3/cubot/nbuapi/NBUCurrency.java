@@ -7,23 +7,7 @@ class NBUCurrency {
     private String cc;
     private String exchangedate;
 
-    public int getR030() {
-        return r030;
-    }
-
-    public String getTxt() {
-        return txt;
-    }
-
     public double getRate() {
         return rate;
-    }
-
-    public String getCc() {
-        return cc;
-    }
-
-    public String getExchangedate() {
-        return exchangedate;
     }
 }
