@@ -10,8 +10,8 @@ class Main {
 
     public static void main(String[] args) throws IOException {
         NBU request = new NBU();
-        String usdRate = request.getNBUCurrenciesRate(DOLLAR, 3);
-        String eurRate = request.getNBUCurrenciesRate(EURO, 3);
+        double usdRate = request.getNBUCurrenciesRate(DOLLAR);
+        double eurRate = request.getNBUCurrenciesRate(EURO);
 
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + usdRate);
         System.out.println("Курс в НБУ: EUR/UAH" + System.lineSeparator() + eurRate);

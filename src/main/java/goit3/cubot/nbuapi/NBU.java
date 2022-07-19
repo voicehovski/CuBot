@@ -5,15 +5,13 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 class NBU {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
-    public String getNBUCurrenciesRate(String currency, int decimals) throws IOException {
+    public double getNBUCurrenciesRate(String currency) throws IOException {
         URL url = new URL(CURRENCY_BY_NAME + currency + "&json");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -35,9 +33,7 @@ class NBU {
             System.out.println("GET request not worked");
         }
 
-        BigDecimal fullRate = new BigDecimal(String.valueOf(parseResponse(response))).setScale(decimals, RoundingMode.UP);
-
-        return fullRate.toString();
+        return parseResponse(response);
     }
 
     public double parseResponse(StringBuffer response) {
