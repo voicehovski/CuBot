@@ -13,7 +13,7 @@ class Main {
         String usdRate = request.getNBUCurrenciesRate(DOLLAR, 3);
         String eurRate = request.getNBUCurrenciesRate(EURO, 3);
 
-        System.out.println("Курс в НБУ: USD/UAH\n" + usdRate);
-        System.out.println("Курс в НБУ: EUR/UAH\n" + eurRate);
+        System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + usdRate);
+        System.out.println("Курс в НБУ: EUR/UAH" + System.lineSeparator() + eurRate);
     }
 }
