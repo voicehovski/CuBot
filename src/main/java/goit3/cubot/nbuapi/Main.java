@@ -9,7 +9,7 @@ class Main {
     private static final String EURO = "EUR";
 
     public static void main(String[] args) throws IOException {
-        NBUHttpRequest request = new NBUHttpRequest();
+        NBU request = new NBU();
         String usdRate = request.getNBUCurrenciesRate(DOLLAR, 3);
         String eurRate = request.getNBUCurrenciesRate(EURO, 3);
 
