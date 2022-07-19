@@ -5,6 +5,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.io.IOException;
+
 public class AppLauncher {
     public static void main(String[] args) {
         try {
@@ -15,8 +17,14 @@ public class AppLauncher {
         }
 
         NBU request = new NBU();
-        double usdRate = request.getNBUCurrenciesRate(DOLLAR);
-        double eurRate = request.getNBUCurrenciesRate(EURO);
+        double usdRate;
+        double eurRate;
+        try {
+            usdRate = request.getNBUCurrenciesRate(String.valueOf(Currency.USD));
+            eurRate = request.getNBUCurrenciesRate(String.valueOf(Currency.EUR));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + usdRate);
         System.out.println("Курс в НБУ: EUR/UAH" + System.lineSeparator() + eurRate);
