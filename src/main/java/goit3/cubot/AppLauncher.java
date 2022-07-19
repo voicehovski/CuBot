@@ -20,8 +20,8 @@ public class AppLauncher {
         double usdRate;
         double eurRate;
         try {
-            usdRate = request.getNBUCurrenciesRate(String.valueOf(Currency.USD));
-            eurRate = request.getNBUCurrenciesRate(String.valueOf(Currency.EUR));
+            usdRate = request.getNBUCurrenciesRate(Currency.USD.name());
+            eurRate = request.getNBUCurrenciesRate(Currency.EUR.name());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
