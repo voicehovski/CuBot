@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class NBU extends Bank {
+class NBU {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
     public String getNBUCurrenciesRate(String currency, int decimals) throws IOException {
