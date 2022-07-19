@@ -1,4 +1,6 @@
 package goit3.cubot;
 
-public class Bot {
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+
+public abstract class Bot extends TelegramLongPollingBot {
 }
