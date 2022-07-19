@@ -1,4 +1,4 @@
 package goit3.cubot;
 
-public class Bank {
+public abstract class Bank {
 }
