@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/*
+* See API details here https://bank.gov.ua/ua/open-data/api-dev
+* */
 public class NBU {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
