@@ -1,49 +1,118 @@
 package goit3.cubot.nbuapi;
 
 import com.google.gson.Gson;
+import goit3.cubot.Bank;
+import goit3.cubot.Currency;
+import goit3.cubot.CurrencyInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /*
 * See API details here https://bank.gov.ua/ua/open-data/api-dev
 * */
-public class NBU {
+public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
-    public double getNBUCurrenciesRate(String currency) throws IOException {
-        URL url = new URL(CURRENCY_BY_NAME + currency + "&json");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/json");
+    public CurrencyInfo parseResponse(StringBuffer response) {
+        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
+        Gson gson = new Gson();
+        NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
 
-        int responseCode = connection.getResponseCode();
+        return new CurrencyInfo() {
 
-        StringBuffer response = new StringBuffer();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader in =
-                    new BufferedReader(
-                            new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            @Override
+            public String getCode() {
+                return currencyObj.getCc();
             }
-            in.close();
+
+            @Override
+            public double getBuy() {
+                return currencyObj.getRate();
+            }
+
+            @Override
+            public double getSale() {
+                return currencyObj.getRate();
+            }
+
+            @Override
+            public long getDateAndTime() {
+                return System.currentTimeMillis();
+            }
+        };
+    }
+
+    @Override
+    public List<CurrencyInfo> getCurrencyList() {
+        return null;
+    }
+
+    @Override
+    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+        HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
+
+        int responseCode = 0;
+        try {
+            responseCode = connection.getResponseCode();
+        } catch (IOException ioe) {
+            throw new RuntimeException("Can`t get responce code");
+        }
+
+        StringBuffer response = null;
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            response = getResponceAsString(connection);
         } else {
-            System.out.println("GET request not worked");
+            throw new RuntimeException("Bank has returned error code " + responseCode);
         }
 
         return parseResponse(response);
     }
 
-    public double parseResponse(StringBuffer response) {
-        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
-        Gson gson = new Gson();
-        NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
+    private HttpURLConnection createConnection (String urlString) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(urlString);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+        } catch (ProtocolException e) {
+            throw new RuntimeException("Incorrect protocol");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Incorrect URL");
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t create network connection");
+        }
+        return connection;
+    }
 
-        return currencyObj.getRate();
+    private StringBuffer getResponceAsString (HttpURLConnection connection) {
+        BufferedReader in = null;
+        StringBuffer response = new StringBuffer();
+        try {
+            in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        } catch (IOException ioe) {
+            throw new RuntimeException("Can`t read from network");
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ioe) {
+                throw new RuntimeException("Can`t close network stream");
+            }
+        }
+        return response;
     }
 }

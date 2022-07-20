@@ -1,20 +1,23 @@
 package goit3.cubot.nbuapi;
 
+import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 
 import java.io.IOException;
 
 public class NBUTest {
-
-    public void test () {
-        NBU request = new NBU();
-        double usdRate;
-        double eurRate;
+    public static void main(String[] args) {
+        test ();
+    }
+    public static void test () {
+        Bank bankService = new NBU();
+        double usdRate = 0;
+        double eurRate = 0;
         try {
-            usdRate = request.getNBUCurrenciesRate(Currency.USD.name());
-            eurRate = request.getNBUCurrenciesRate(Currency.EUR.name());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            usdRate = bankService.getCurrencyByCode(Currency.USD).getSale ();
+            eurRate = bankService.getCurrencyByCode(Currency.EUR).getBuy();
+        } catch (RuntimeException e) {
+            e .printStackTrace();
         }
 
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + usdRate);
