@@ -60,16 +60,16 @@ public class NBU extends Bank {
     public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
         HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
 
-        int responseCode = 0;
+        int responseCode;
         try {
             responseCode = connection.getResponseCode();
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t get responce code");
+            throw new RuntimeException("Can`t get response code");
         }
 
-        StringBuffer response = null;
+        StringBuffer response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            response = getResponceAsString(connection);
+            response = getResponseAsString(connection);
         } else {
             throw new RuntimeException("Bank has returned error code " + responseCode);
         }
@@ -78,7 +78,7 @@ public class NBU extends Bank {
     }
 
     private HttpURLConnection createConnection (String urlString) {
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
@@ -94,7 +94,7 @@ public class NBU extends Bank {
         return connection;
     }
 
-    private StringBuffer getResponceAsString (HttpURLConnection connection) {
+    private StringBuffer getResponseAsString (HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -108,7 +108,9 @@ public class NBU extends Bank {
             throw new RuntimeException("Can`t read from network");
         } finally {
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException ioe) {
                 throw new RuntimeException("Can`t close network stream");
             }
