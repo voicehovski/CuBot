@@ -1,16 +1,16 @@
 package goit3.cubot.monobankAPI;
 
 public class CurrencyExchange {
-    private int currencyCodeA;
-    private int currencyCodeB;
-    private long date;
-    private float rateBuy;
-    private float rateSell;
+    int currencyCodeA;
+    int currencyCodeB;
+    int dateUnix;
+    float rateBuy;
+    float rateSell;
 
-    public CurrencyExchange(int currencyCodeA, int currencyCodeB, long date, float rateBuy, float rateSell) {
+    public CurrencyExchange(int currencyCodeA, int currencyCodeB, int dateUnix, float rateBuy, float rateSell) {
         this.currencyCodeA = currencyCodeA;
         this.currencyCodeB = currencyCodeB;
-        this.date = date;
+        this.dateUnix = dateUnix;
         this.rateBuy = rateBuy;
         this.rateSell = rateSell;
     }
@@ -23,8 +23,8 @@ public class CurrencyExchange {
         return currencyCodeB;
     }
 
-    public long getDate() {
-        return date;
+    public int getDateUnix() {
+        return dateUnix;
     }
 
     public float getRateBuy() {
@@ -40,7 +40,7 @@ public class CurrencyExchange {
         return "CurrencyExchange{" +
                 "currencyCodeA=" + currencyCodeA +
                 ", currencyCodeB=" + currencyCodeB +
-                ", date=" + date +
+                ", dateUnix=" + dateUnix +
                 ", rateBuy=" + rateBuy +
                 ", rateSell=" + rateSell +
                 '}';
