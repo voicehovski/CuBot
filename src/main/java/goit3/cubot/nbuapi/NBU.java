@@ -24,7 +24,6 @@ import static java.util.Arrays.asList;
 * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
-    StringBuffer response;
 
     public CurrencyInfo parseResponse(StringBuffer response) {
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
