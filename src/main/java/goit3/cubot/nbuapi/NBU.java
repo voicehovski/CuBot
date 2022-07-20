@@ -12,15 +12,19 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /*
 * See API details here https://bank.gov.ua/ua/open-data/api-dev
 * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
+    StringBuffer response;
 
     public CurrencyInfo parseResponse(StringBuffer response) {
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
