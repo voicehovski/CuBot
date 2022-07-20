@@ -14,7 +14,7 @@ class PrivatBankServiceTest {
 
     @org.junit.jupiter.api.Test
     void getCurrencyExchange() {
-        assertNotEquals("В вибраному банку немає даних для обраної валюти: " + Currency.USD,
+        assertNotEquals("Р’ РІРёР±СЂР°РЅРѕРјСѓ Р±Р°РЅРєСѓ РЅРµРјР°С” РґР°РЅРёС… РґР»СЏ РѕР±СЂР°РЅРѕС— РІР°Р»СЋС‚Рё: " + Currency.USD,
                 bankService.getCurrencyExchange(Currency.USD), "Incorrect value for " + Currency.USD);
     }
 }

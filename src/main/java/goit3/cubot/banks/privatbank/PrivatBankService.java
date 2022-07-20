@@ -26,14 +26,14 @@ public class PrivatBankService extends Bank {
                 .findFirst();
 
         if (exchange.isEmpty()) {
-            return "В вибраному банку немає даних для обраної валюти: " + valute.name();
+            return "Р’ РІРёР±СЂР°РЅРѕРјСѓ Р±Р°РЅРєСѓ РЅРµРјР°С” РґР°РЅРёС… РґР»СЏ РѕР±СЂР°РЅРѕС— РІР°Р»СЋС‚Рё: " + valute.name();
         }
 
-        return "Курс в Приватбанк " + exchange.get().ccy + '/' + exchange.get().base_ccy +
+        return "РљСѓСЂСЃ РІ РџСЂРёРІР°С‚Р±Р°РЅРє " + exchange.get().ccy + '/' + exchange.get().base_ccy +
                 System.lineSeparator() +
-                "Покупка: " + exchange.get().buy +
+                "РџРѕРєСѓРїРєР°: " + exchange.get().buy +
                 System.lineSeparator() +
-                "Продажа: " + exchange.get().sale;
+                "РџСЂРѕРґР°Р¶Р°: " + exchange.get().sale;
     }
 
     private List<Exchange> getExchanges() {
@@ -109,11 +109,11 @@ class Exchange {
 
     @Override
     public String toString() {
-        return "Курс в Приватбанк " +
+        return "РљСѓСЂСЃ РІ РџСЂРёРІР°С‚Р±Р°РЅРє " +
                 ccy + '/' + base_ccy +
                 System.lineSeparator() +
-                "Покупка: " + buy +
+                "РџРѕРєСѓРїРєР°: " + buy +
                 System.lineSeparator() +
-                "Продажа: " + sale;
+                "РџСЂРѕРґР°Р¶Р°: " + sale;
     }
 }
