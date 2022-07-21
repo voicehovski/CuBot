@@ -60,7 +60,7 @@ public class NBU extends Bank {
         List<NBUCurrency> nbuCurrencyList = new Gson().fromJson(toCurrency, new TypeToken<List<NBUCurrency>>() {
         }.getType());
 
-        return nbuCurrencyList.stream().map(s -> (CurrencyInfo) s).collect(Collectors.toList());
+        return nbuCurrencyList.stream().map(ncl -> (CurrencyInfo) ncl).collect(Collectors.toList());
     }
 
     @Override
