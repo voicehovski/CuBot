@@ -1,7 +1,6 @@
 package goit3.cubot.bot_api;
 
 import goit3.cubot.Bot;
-import goit3.cubot.Currency;
 import goit3.cubot.bot_api.bot_buttons.*;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -108,21 +107,12 @@ public class TelegramBot extends Bot {
         if (message.hasText()) {
             System.out.println(message.getText());
             if (message.getText().equals("/start")) {
-                List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-
-                buttons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("Інфо")
-                        .callbackData("Інфо")
-                        .build()));
-                buttons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("Налаштування")
-                        .callbackData("Налаштування")
-                        .build()));
+                MainMenu mainMenu = new MainMenu();
 
                 execute(SendMessage.builder()
                         .text("Вітаю! Цей бот допоможе Вам дізнатися актуальний курс валют")
                         .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(mainMenu.mainMenuButtons()).build())
                         .build());
             } else {
                 execute(SendMessage.builder()
