@@ -7,7 +7,10 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -15,8 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TelegramBot extends Bot {
+    public static final String BOT_NAME = "java_core_6_bot";
+    public static final String BOT_TOKEN = "5272943909:AAF-YA8RaWrmUuIS87VN0GGCvHKGl8yWmLE";
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasCallbackQuery()) {
             try {
                 handleCallback(update.getCallbackQuery());
@@ -34,6 +40,7 @@ public class TelegramBot extends Bot {
 
     private void handleCallback(CallbackQuery callbackQuery) throws TelegramApiException {
         Message message = callbackQuery.getMessage();
+        String chatMessageId = message.getChatId().toString();
         String action = callbackQuery.getData();
         System.out.println(action);
 
@@ -41,7 +48,7 @@ public class TelegramBot extends Bot {
             case "Інфо":
                 execute(SendMessage.builder()
                         .text("ПриватБанк UAH/USD\n30\n32")
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .build());
                 break;
             case "Налаштування":
@@ -55,7 +62,7 @@ public class TelegramBot extends Bot {
                 execute(SendMessage.builder()
                         .text("Налаштування")
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(settingsButtons).build())
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .build());
                 break;
             case "DIGITS":
@@ -76,7 +83,7 @@ public class TelegramBot extends Bot {
 
                 execute(SendMessage.builder()
                         .text("Оберіть кількість знаків після коми")
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(digitsButtons).build())
                         .build());
                 break;
@@ -98,12 +105,15 @@ public class TelegramBot extends Bot {
 
                 execute(SendMessage.builder()
                         .text("Оберіть банк")
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(bankButtons).build())
                         .build());
                 break;
             case "TIME":
+                TimeNotifications time = new TimeNotifications();
+                       time.getKeyboard(callbackQuery);
                 break;
+
             case "CURRENCIES":
                 List<List<InlineKeyboardButton>> currenciesButtons = new ArrayList<>();
 //                Currency currentCurrency = currencyService.getCurrency(message.getChatId());
@@ -117,13 +127,14 @@ public class TelegramBot extends Bot {
                 execute(SendMessage.builder()
                         .text("Оберіть валюту")
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(currenciesButtons).build())
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .build());
                 break;
         }
     }
 
     private void handleMessage(Message message) throws TelegramApiException {
+        String chatMessageId = message.getChatId().toString();
 
         if (message.hasText()) {
             System.out.println(message.getText());
@@ -141,26 +152,54 @@ public class TelegramBot extends Bot {
 
                 execute(SendMessage.builder()
                         .text("Вітаю! Цей бот допоможе Вам дізнатися актуальний курс валют")
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                         .build());
 
             } else {
                 execute(SendMessage.builder()
                         .text("Будь ласка, оберіть фунцкію зі списку")
-                        .chatId(message.getChatId().toString())
+                        .chatId(chatMessageId)
                         .build());
             }
         }
     }
 
+    public void setButtons(SendMessage sendMessage) {
+        // Создаем клавиуатуру
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        // Создаем список строк клавиатуры
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        // Первая строчка клавиатуры
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        // Добавляем кнопки в первую строчку клавиатуры
+        keyboardFirstRow.add(new KeyboardButton("Ку"));
+
+        // Вторая строчка клавиатуры
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        // Добавляем кнопки во вторую строчку клавиатуры
+        keyboardSecondRow.add(new KeyboardButton("Допомога"));
+
+        // Добавляем все строчки клавиатуры в список
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        // и устанваливаем этот список нашей клавиатуре
+        replyKeyboardMarkup.setKeyboard(keyboard);
+    }
+
     @Override
     public String getBotUsername() {
-        return "java_core_6_bot";
+        return BOT_NAME;
     }
 
     @Override
     public String getBotToken() {
-        return "5272943909:AAF-YA8RaWrmUuIS87VN0GGCvHKGl8yWmLE";
+        return BOT_TOKEN;
     }
 }

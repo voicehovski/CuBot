@@ -13,7 +13,7 @@ public class AppLauncher {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             // запуск бота
-//            telegramBotsApi.registerBot(new TelegramBot());
+            telegramBotsApi.registerBot(new TelegramBot());
         } catch (TelegramApiException tae) {
             tae.printStackTrace();
         }
