@@ -14,13 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 /*
 * See API details here https://bank.gov.ua/ua/open-data/api-dev
