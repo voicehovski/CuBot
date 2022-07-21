@@ -27,8 +27,7 @@ public class NBU extends Bank {
 
     public CurrencyInfo parseResponse(StringBuffer response) {
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
-        Gson gson = new Gson();
-        NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
+        NBUCurrency currencyObj = new Gson().fromJson(toCurrency, NBUCurrency.class);
 
         return new CurrencyInfo() {
 
