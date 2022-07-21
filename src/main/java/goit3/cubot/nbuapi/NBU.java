@@ -55,6 +55,7 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
+
         return null;
     }
 
@@ -79,7 +80,7 @@ public class NBU extends Bank {
         return parseResponse(response);
     }
 
-    private HttpURLConnection createConnection (String urlString) {
+    private HttpURLConnection createConnection(String urlString) {
         HttpURLConnection connection;
         try {
             URL url = new URL(urlString);
@@ -96,7 +97,7 @@ public class NBU extends Bank {
         return connection;
     }
 
-    private StringBuffer getResponseAsString (HttpURLConnection connection) {
+    private StringBuffer getResponseAsString(HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
