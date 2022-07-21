@@ -3,14 +3,13 @@ package goit3.cubot.bot_api;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeNotifications extends TelegramBot {
+public class TimeNotificationsMenu extends TelegramBot {
 
     public void getKeyboard(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
@@ -54,20 +53,5 @@ public class TimeNotifications extends TelegramBot {
         } catch (TelegramApiException e) {
             e.getStackTrace();
         }
-    }
-
-    @Override
-    public String getBotUsername() {
-        return BOT_NAME;
-    }
-
-    @Override
-    public String getBotToken() {
-        return BOT_TOKEN;
-    }
-
-    @Override
-    public void onUpdateReceived(Update update) {
-
     }
 }
