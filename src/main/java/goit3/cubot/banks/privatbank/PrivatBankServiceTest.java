@@ -1,8 +1,11 @@
 package goit3.cubot.banks.privatbank;
 
 import goit3.cubot.Currency;
+import goit3.cubot.CurrencyInfo;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class PrivatBankServiceTest {
     private static PrivatBankService bankService;
@@ -14,7 +17,14 @@ class PrivatBankServiceTest {
 
     @org.junit.jupiter.api.Test
     void getCurrencyExchange() {
-        assertNotEquals("В вибраному банку немає даних для обраної валюти: " + Currency.USD,
-                bankService.getCurrencyExchange(Currency.USD), "Incorrect value for " + Currency.USD);
+        CurrencyInfo currencyInfo = bankService.getCurrencyByCode(Currency.USD);
+        List<CurrencyInfo> currencyInfoList = bankService.getCurrencyList();
+
+        assertInstanceOf(CurrencyInfo.class, currencyInfo);
+        assertEquals(Currency.USD.name(), currencyInfo.getCode());
+        assertNotEquals(0.0, currencyInfo.getBuy());
+        assertNotEquals(0.0, currencyInfo.getSale());
+        assertNotEquals(0, currencyInfoList.size());
+
     }
 }
