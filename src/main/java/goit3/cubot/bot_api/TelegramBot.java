@@ -2,15 +2,13 @@ package goit3.cubot.bot_api;
 
 import goit3.cubot.Bot;
 import goit3.cubot.Currency;
+import goit3.cubot.bot_api.bot_buttons.*;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -20,6 +18,7 @@ import java.util.List;
 public class TelegramBot extends Bot {
     public static final String BOT_NAME = "java_core_6_bot";
     public static final String BOT_TOKEN = "5272943909:AAF-YA8RaWrmUuIS87VN0GGCvHKGl8yWmLE";
+
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -47,86 +46,56 @@ public class TelegramBot extends Bot {
         switch (action) {
             case "Інфо":
                 execute(SendMessage.builder()
+                        // вказати дані користувача
+//                        .text(String.format(
+//                                "%s %s\n%d\n%d",
+//                                User.getBank, User.getCurrency, User.getBank.getBuy, User.getBank.getSell))
                         .text("ПриватБанк UAH/USD\n30\n32")
                         .chatId(chatMessageId)
                         .build());
                 break;
+
             case "Налаштування":
-                List<List<InlineKeyboardButton>> settingsButtons = new ArrayList<>();
-                for (Settings settings : Settings.values()) {
-                    settingsButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                            .text(settings.name())
-                            .callbackData(settings.name())
-                            .build()));
-                }
+                SettingsButtons settingsButtons = new SettingsButtons();
+
                 execute(SendMessage.builder()
                         .text("Налаштування")
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(settingsButtons).build())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(settingsButtons.getSettings()).build())
                         .chatId(chatMessageId)
                         .build());
                 break;
-            case "DIGITS":
-                List<List<InlineKeyboardButton>> digitsButtons = new ArrayList<>();
 
-                digitsButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("2")
-                        .callbackData("2")
-                        .build()));
-                digitsButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("3")
-                        .callbackData("3")
-                        .build()));
-                digitsButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("4")
-                        .callbackData("4")
-                        .build()));
+            case "DIGITS":
+                DigitsAfterComma digitsAfterComma = new DigitsAfterComma();
 
                 execute(SendMessage.builder()
                         .text("Оберіть кількість знаків після коми")
                         .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(digitsButtons).build())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(digitsAfterComma.getDigits()).build())
                         .build());
                 break;
-            case "BANK":
-                List<List<InlineKeyboardButton>> bankButtons = new ArrayList<>();
 
-                bankButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("НБУ")
-                        .callbackData("НБУ")
-                        .build()));
-                bankButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("ПриватБанк")
-                        .callbackData("ПриватБанк")
-                        .build()));
-                bankButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-                        .text("Монобанк")
-                        .callbackData("Монобанк")
-                        .build()));
+            case "BANK":
+                BankButtons bankButtons = new BankButtons();
 
                 execute(SendMessage.builder()
                         .text("Оберіть банк")
                         .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(bankButtons).build())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(bankButtons.bankList()).build())
                         .build());
                 break;
+
             case "TIME":
-                TimeNotifications time = new TimeNotifications();
-                       time.getKeyboard(callbackQuery);
+                TimeNotificationsMenu notificationTime = new TimeNotificationsMenu();
+                notificationTime.getKeyboard(callbackQuery);
                 break;
 
             case "CURRENCIES":
-                List<List<InlineKeyboardButton>> currenciesButtons = new ArrayList<>();
-//                Currency currentCurrency = currencyService.getCurrency(message.getChatId());
-                for (Currency currency : Currency.values()) {
-                    currenciesButtons.add(Arrays.asList(InlineKeyboardButton.builder()
-//                            .text(getCurrencyButton(currentCurrency, currency))
-                            .text(currency.name())
-                            .callbackData(currency.name())
-                            .build()));
-                }
+                CurrenciesButtons currenciesButtons = new CurrenciesButtons();
+
                 execute(SendMessage.builder()
                         .text("Оберіть валюту")
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(currenciesButtons).build())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(currenciesButtons.getCurrency()).build())
                         .chatId(chatMessageId)
                         .build());
                 break;
@@ -155,7 +124,6 @@ public class TelegramBot extends Bot {
                         .chatId(chatMessageId)
                         .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                         .build());
-
             } else {
                 execute(SendMessage.builder()
                         .text("Будь ласка, оберіть фунцкію зі списку")
@@ -166,31 +134,31 @@ public class TelegramBot extends Bot {
     }
 
     public void setButtons(SendMessage sendMessage) {
-        // Создаем клавиуатуру
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        // Создаем список строк клавиатуры
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
-        // Первая строчка клавиатуры
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-        // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton("Ку"));
-
-        // Вторая строчка клавиатуры
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add(new KeyboardButton("Допомога"));
-
-        // Добавляем все строчки клавиатуры в список
-        keyboard.add(keyboardFirstRow);
-        keyboard.add(keyboardSecondRow);
-        // и устанваливаем этот список нашей клавиатуре
-        replyKeyboardMarkup.setKeyboard(keyboard);
+//        // Создаем клавиуатуру
+//        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+//        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+//        replyKeyboardMarkup.setSelective(true);
+//        replyKeyboardMarkup.setResizeKeyboard(true);
+//        replyKeyboardMarkup.setOneTimeKeyboard(false);
+//
+//        // Создаем список строк клавиатуры
+//        List<KeyboardRow> keyboard = new ArrayList<>();
+//
+//        // Первая строчка клавиатуры
+//        KeyboardRow keyboardFirstRow = new KeyboardRow();
+//        // Добавляем кнопки в первую строчку клавиатуры
+//        keyboardFirstRow.add(new KeyboardButton("Ку"));
+//
+//        // Вторая строчка клавиатуры
+//        KeyboardRow keyboardSecondRow = new KeyboardRow();
+//        // Добавляем кнопки во вторую строчку клавиатуры
+//        keyboardSecondRow.add(new KeyboardButton("Допомога"));
+//
+//        // Добавляем все строчки клавиатуры в список
+//        keyboard.add(keyboardFirstRow);
+//        keyboard.add(keyboardSecondRow);
+//        // и устанваливаем этот список нашей клавиатуре
+//        replyKeyboardMarkup.setKeyboard(keyboard);
     }
 
     @Override

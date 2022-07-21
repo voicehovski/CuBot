@@ -1,5 +1,6 @@
-package goit3.cubot.bot_api;
+package goit3.cubot.bot_api.bot_buttons;
 
+import goit3.cubot.bot_api.TelegramBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
