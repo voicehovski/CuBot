@@ -40,7 +40,7 @@ public class PrivatBankService extends Bank {
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            throw new PrivateBankException("Помилка при підключенні до: " + request.uri(), e);
+            throw new PrivateBankException("Error for request to : " + request.uri(), e);
         }
         if (response.statusCode() == 200) {
             List<Exchange> exchanges = new Gson().fromJson(response.body(), new TypeToken<List<Exchange>>() {
@@ -48,9 +48,9 @@ public class PrivatBankService extends Bank {
 
             return exchanges.stream().map(s -> (CurrencyInfo) s).collect(Collectors.toList());
         } else {
-            throw new PrivateBankException("Помилка при отриманні даних з " + System.lineSeparator()
+            throw new PrivateBankException("Error for getting data from: " + System.lineSeparator()
                     + response.uri() + System.lineSeparator()
-                    + "Код відповіді GET запиту: " + response.statusCode());
+                    + "Http status code " + response.statusCode());
         }
 
     }
