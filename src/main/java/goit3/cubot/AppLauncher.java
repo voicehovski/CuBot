@@ -12,7 +12,8 @@ public class AppLauncher {
     public static void main(String[] args) {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new TelegramBot());
+            // запуск бота
+//            telegramBotsApi.registerBot(new TelegramBot());
         } catch (TelegramApiException tae) {
             tae.printStackTrace();
         }
