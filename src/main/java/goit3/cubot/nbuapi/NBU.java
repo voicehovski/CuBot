@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
-    public CurrencyInfo parseResponse(StringBuffer response) {
-        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
-        NBUCurrency currencyObj = new Gson().fromJson(toCurrency, NBUCurrency.class);
+    public CurrencyInfo parseResponse(String response) {
+//        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
+        NBUCurrency currencyObj = new Gson().fromJson(response.substring(1, response.length() - 1), NBUCurrency.class);
 
         return new CurrencyInfo() {
 
@@ -55,7 +55,10 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
-
+//        List<NBUCurrency> nbuCurrencyList = new Gson().fromJson(response, new TypeToken<List<NBUCurrency>>() {
+//        }.getType());
+//
+//        return nbuCurrencyList.stream().map(ncl -> (CurrencyInfo) ncl).collect(Collectors.toList());
         return null;
     }
 
@@ -70,7 +73,7 @@ public class NBU extends Bank {
             throw new RuntimeException("Can`t get response code");
         }
 
-        StringBuffer response;
+        String response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = getResponseAsString(connection);
         } else {
@@ -97,7 +100,7 @@ public class NBU extends Bank {
         return connection;
     }
 
-    private StringBuffer getResponseAsString(HttpURLConnection connection) {
+    private String getResponseAsString(HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -118,6 +121,6 @@ public class NBU extends Bank {
                 throw new RuntimeException("Can`t close network stream");
             }
         }
-        return response;
+        return response.toString();
     }
 }

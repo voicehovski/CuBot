@@ -4,6 +4,8 @@ import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
 
+import java.util.Arrays;
+
 
 public class NBUTest {
     public static void main(String[] args) {
@@ -21,5 +23,7 @@ public class NBUTest {
 
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + "Покупка: " + usdRate);
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + "Продажа: " + usdRate);
+
+        System.out.println(bankService.getCurrencyList());
     }
 }
