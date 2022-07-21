@@ -1,6 +1,8 @@
 package goit3.cubot.nbuapi;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -24,9 +27,10 @@ import static java.util.Arrays.asList;
 * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
+    String toCurrency;
 
     public CurrencyInfo parseResponse(StringBuffer response) {
-        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
+        toCurrency = String.valueOf(response).substring(1, response.length() - 1);
         Gson gson = new Gson();
         NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
 
@@ -56,7 +60,10 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
-        return null;
+        List<NBUCurrency> nbuCurrencyList = new Gson().fromJson(toCurrency, new TypeToken<List<NBUCurrency>>() {
+        }.getType());
+
+        return nbuCurrencyList.stream().map(s -> (CurrencyInfo) s).collect(Collectors.toList());
     }
 
     @Override
