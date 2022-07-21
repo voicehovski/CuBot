@@ -26,7 +26,6 @@ public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
 
     public CurrencyInfo parseResponse(String response) {
-//        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
         NBUCurrency currencyObj = new Gson().fromJson(response.substring(1, response.length() - 1), NBUCurrency.class);
 
         return new CurrencyInfo() {
