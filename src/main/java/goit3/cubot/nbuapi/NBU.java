@@ -24,10 +24,9 @@ import java.util.stream.Collectors;
 * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
-    String toCurrency;
 
     public CurrencyInfo parseResponse(StringBuffer response) {
-        toCurrency = String.valueOf(response).substring(1, response.length() - 1);
+        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
         Gson gson = new Gson();
         NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
 
@@ -57,10 +56,7 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
-        List<NBUCurrency> nbuCurrencyList = new Gson().fromJson(toCurrency, new TypeToken<List<NBUCurrency>>() {
-        }.getType());
-
-        return nbuCurrencyList.stream().map(ncl -> (CurrencyInfo) ncl).collect(Collectors.toList());
+        return null;
     }
 
     @Override
