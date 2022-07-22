@@ -1,6 +1,7 @@
 package goit3.cubot.nbuapi;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
@@ -21,6 +22,10 @@ import java.util.List;
 * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
+    // 2 ---------------------------------------------------------\
+    // Внести нужный url
+    private static final String CURRENCY_LIST_URL = "";
+    // 2 ---------------------------------------------------------/
 
     public CurrencyInfo parseResponse(StringBuffer response) {
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
@@ -53,11 +58,26 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
+        // 3 ---------------------------------------------------------\
+        StringBuffer jsonString = getJsonString(CURRENCY_LIST_URL);
+
+        // Вот такой замысловатый код нужен если в json-е массив элементов
+        // В parseResponse ты обрезал строку. Наверно здесь тоже понадобится
+        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>(){} .getType (  );
+        Gson gson = new Gson();
+        List<NBUCurrency> currencyList = gson .fromJson ( jsonString .toString(), listElementType );
+
+        // Преобразовать List<NBUCurrency> в List<CurrencyInfo> и вернуть
+        // 3 ---------------------------------------------------------/
         return null;
     }
 
     @Override
     public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+
+
+        // 1 ---------------------------------------------------------\
+        // Этот код ты выносишь в метод getJsonString
         HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
 
         int responseCode = 0;
@@ -73,8 +93,15 @@ public class NBU extends Bank {
         } else {
             throw new RuntimeException("Bank has returned error code " + responseCode);
         }
+        // 1 ---------------------------------------------------------/
 
+        // Содержимое parseResponse можно прямо здесь разместить - дело вкуса
         return parseResponse(response);
+    }
+
+    private StringBuffer getJsonString (String request) {
+
+        return null;
     }
 
     private HttpURLConnection createConnection (String urlString) {
