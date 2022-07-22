@@ -1,7 +1,7 @@
 package goit3.cubot.bot_api.bot_buttons;
 
 import goit3.cubot.Currency;
-import goit3.cubot.bot_api.currency_logic.CurrencyBotService;
+import goit3.cubot.bot_api.currency_logic.BotService;
 import goit3.cubot.bot_api.TelegramBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CurrenciesButtons extends TelegramBot {
-    private final CurrencyBotService currencyBotService = CurrencyBotService.getInstance();
+    private final BotService currencyBotService = BotService.getInstance();
 
     public void getCurrenciesList(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
@@ -40,7 +40,7 @@ public class CurrenciesButtons extends TelegramBot {
         }
     }
 
-    public void getCurrency(CallbackQuery callbackQuery) {
+    public void getCurrentCurrency(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
         Long chatId = message.getChatId();
         String chatMessageId = chatId.toString();

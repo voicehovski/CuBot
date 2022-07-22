@@ -5,11 +5,10 @@ import goit3.cubot.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HashMapCurrencyBotService implements CurrencyBotService {
+public class HashMapCurrencyBotService implements BotService {
     private final Map<Long, Currency> currentCurrency = new HashMap<>();
 
     public HashMapCurrencyBotService() {
-//        System.out.println("HASHMAP MODE is created");
     }
 
     @Override

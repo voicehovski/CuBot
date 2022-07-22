@@ -2,9 +2,9 @@ package goit3.cubot.bot_api.currency_logic;
 
 import goit3.cubot.Currency;
 
-public interface CurrencyBotService {
+public interface BotService {
 
-    static CurrencyBotService getInstance() {
+    static BotService getInstance() {
         return new HashMapCurrencyBotService();
     }
 

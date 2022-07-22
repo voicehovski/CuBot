@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static goit3.cubot.bot_api.bot_buttons.BankButtons.*;
+import static goit3.cubot.bot_api.bot_buttons.DigitsAfterComma.*;
 import static goit3.cubot.bot_api.bot_buttons.MainMenu.*;
 import static goit3.cubot.bot_api.bot_buttons.SettingsButtons.*;
 import static goit3.cubot.bot_api.bot_buttons.TimeNotificationsMenu.*;
@@ -60,9 +61,21 @@ public class TelegramBot extends Bot {
                 DigitsAfterComma digitsAfterComma = new DigitsAfterComma();
                 digitsAfterComma.getDigits(callbackQuery);
                 break;
+            case TWO_DIGITS:
+            case THREE_DIGITS:
+            case FOUR_DIGITS:
+                DigitsAfterComma setDigit = new DigitsAfterComma();
+                setDigit.getCurrentDigit(callbackQuery);
+                break;
             case BANK:
                 BankButtons bankButtons = new BankButtons();
                 bankButtons.bankList(callbackQuery);
+                break;
+            case NBU:
+            case PRIVATBANK:
+            case MONOBANK:
+                BankButtons setBank = new BankButtons();
+                setBank.getCurrentBank(callbackQuery);
                 break;
             case TIME_NOTIFICATION:
                 TimeNotificationsMenu notificationTime = new TimeNotificationsMenu();
@@ -72,18 +85,10 @@ public class TelegramBot extends Bot {
                 CurrenciesButtons currenciesButtons = new CurrenciesButtons();
                 currenciesButtons.getCurrenciesList(callbackQuery);
                 break;
-            case NBU:
-            case PRIVATBANK:
-            case MONOBANK:
-                execute(SendMessage.builder()
-                        .text("Обраний банк " + callbackQuery.getData())
-                        .chatId(chatMessageId)
-                        .build());
-                break;
             case "USD":
             case "EUR":
                CurrenciesButtons currencyButton = new CurrenciesButtons();
-               currencyButton.getCurrency(callbackQuery);
+               currencyButton.getCurrentCurrency(callbackQuery);
                 break;
         }
     }
