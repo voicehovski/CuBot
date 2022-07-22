@@ -5,7 +5,7 @@ import goit3.cubot.Currency;
 public interface CurrencyBotService {
 
     static CurrencyBotService getInstance() {
-        return new HashMapCurrencyModeBotService();
+        return new HashMapCurrencyBotService();
     }
 
     Currency getCurrency(long chatId);
