@@ -1,4 +1,4 @@
-package goit3.cubot.banks.privatbank;
+package goit3.cubot.pbapi;
 
 import goit3.cubot.CurrencyInfo;
 

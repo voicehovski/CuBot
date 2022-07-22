@@ -1,10 +1,13 @@
-package goit3.cubot.banks.privatbank;
+package goit3.cubot.pbapi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
+import goit3.cubot.exceptions.BadServerResponceException;
+import goit3.cubot.exceptions.NetworkProblemException;
+import goit3.cubot.exceptions.UnsupportedCurrencyException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,8 +29,8 @@ public class PrivatBankService extends Bank {
                 .filter(ex -> ex.getCode().equalsIgnoreCase(valute.name()))
                 .findFirst();
 
-        return exchange.orElseThrow(() -> new PrivateBankException("Don`t supported currency for PrivatBank: "
-                + valute.name()));
+        return exchange.orElseThrow(() -> new UnsupportedCurrencyException("Don`t supported currency for PrivatBank: "
+                + valute.name(), valute.name()));
     }
 
     @Override
@@ -40,7 +43,7 @@ public class PrivatBankService extends Bank {
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            throw new PrivateBankException("Error for request to : " + request.uri(), e);
+            throw new NetworkProblemException();
         }
         if (response.statusCode() == 200) {
             List<Exchange> exchanges = new Gson().fromJson(response.body(), new TypeToken<List<Exchange>>() {
@@ -48,9 +51,9 @@ public class PrivatBankService extends Bank {
 
             return exchanges.stream().map(s -> (CurrencyInfo) s).collect(Collectors.toList());
         } else {
-            throw new PrivateBankException("Error for getting data from: " + System.lineSeparator()
-                    + response.uri() + System.lineSeparator()
-                    + "Http status code " + response.statusCode());
+            throw new BadServerResponceException("Error for getting data from: " + System.lineSeparator()
+                    + response.uri()
+                    , String.valueOf(response.statusCode()));
         }
 
     }
