@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeNotificationsMenu extends TelegramBot {
+    public static final String VALID_TIME = "Час, обраний вами %d:00";
+    public static final String INVALID_TIME = "Час, обраний вами %d:00, недоступний. Будь ласка, оберіть зі списку";
+    public static final String TURN_OFF_NOTIFICATION = "Вимкнути сповіщення";
 
     public void getKeyboard(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
@@ -24,20 +27,24 @@ public class TimeNotificationsMenu extends TelegramBot {
             KeyboardRow row3 = new KeyboardRow();
             KeyboardRow row4 = new KeyboardRow();
 
+            // first row
             row1.add("9");
             row1.add("10");
             row1.add("11");
 
+            // second row
             row2.add("12");
             row2.add("13");
             row2.add("14");
 
+            // third row
             row3.add("15");
             row3.add("16");
             row3.add("17");
 
+            // fourth row
             row4.add("18");
-            row4.add("Вимкнути сповіщення");
+            row4.add(TURN_OFF_NOTIFICATION);
 
             keyboard.add(row1);
             keyboard.add(row2);
@@ -49,10 +56,23 @@ public class TimeNotificationsMenu extends TelegramBot {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatMessageId);
             sendMessage.setReplyMarkup(keyboardMarkup);
-            sendMessage.setText("Оберіть час сповіщення");
+            sendMessage.setText("Оберіть час оповіщення");
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.getStackTrace();
         }
+    }
+
+    public static boolean isDigit(String userText) throws NumberFormatException {
+        try {
+            Integer.parseInt(userText);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isTimeAvailable(int userTime) {
+        return userTime >= 9 && userTime <= 18;
     }
 }

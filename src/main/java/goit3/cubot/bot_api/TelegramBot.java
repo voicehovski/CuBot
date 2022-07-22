@@ -6,13 +6,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static goit3.cubot.bot_api.bot_buttons.BankButtons.*;
+import static goit3.cubot.bot_api.bot_buttons.MainMenu.*;
+import static goit3.cubot.bot_api.bot_buttons.SettingsButtons.*;
+import static goit3.cubot.bot_api.bot_buttons.TimeNotificationsMenu.*;
 
 public class TelegramBot extends Bot {
     public static final String BOT_NAME = "java_core_6_bot";
@@ -43,7 +42,7 @@ public class TelegramBot extends Bot {
         System.out.println(action);
 
         switch (action) {
-            case "Інфо":
+            case INFO:
                 execute(SendMessage.builder()
                         // вказати дані користувача
 //                        .text(String.format(
@@ -53,66 +52,68 @@ public class TelegramBot extends Bot {
                         .chatId(chatMessageId)
                         .build());
                 break;
-
-            case "Налаштування":
+            case SETTINGS:
                 SettingsButtons settingsButtons = new SettingsButtons();
-
-                execute(SendMessage.builder()
-                        .text("Налаштування")
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(settingsButtons.getSettings()).build())
-                        .chatId(chatMessageId)
-                        .build());
+                settingsButtons.getSettings(callbackQuery);
                 break;
-
-            case "DIGITS":
+            case DIGITS_AFTER_COMMA:
                 DigitsAfterComma digitsAfterComma = new DigitsAfterComma();
-
-                execute(SendMessage.builder()
-                        .text("Оберіть кількість знаків після коми")
-                        .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(digitsAfterComma.getDigits()).build())
-                        .build());
+                digitsAfterComma.getDigits(callbackQuery);
                 break;
-
-            case "BANK":
+            case BANK:
                 BankButtons bankButtons = new BankButtons();
-
-                execute(SendMessage.builder()
-                        .text("Оберіть банк")
-                        .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(bankButtons.bankList()).build())
-                        .build());
+                bankButtons.bankList(callbackQuery);
                 break;
-
-            case "TIME":
+            case TIME_NOTIFICATION:
                 TimeNotificationsMenu notificationTime = new TimeNotificationsMenu();
                 notificationTime.getKeyboard(callbackQuery);
                 break;
-
-            case "CURRENCIES":
+            case CURRENCIES:
                 CurrenciesButtons currenciesButtons = new CurrenciesButtons();
-
+                currenciesButtons.getCurrenciesList(callbackQuery);
+                break;
+            case NBU:
+            case PRIVATBANK:
+            case MONOBANK:
                 execute(SendMessage.builder()
-                        .text("Оберіть валюту")
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(currenciesButtons.getCurrency()).build())
+                        .text("Обраний банк " + callbackQuery.getData())
                         .chatId(chatMessageId)
                         .build());
+                break;
+            case "USD":
+            case "EUR":
+               CurrenciesButtons currencyButton = new CurrenciesButtons();
+               currencyButton.getCurrency(callbackQuery);
                 break;
         }
     }
 
-    private void handleMessage(Message message) throws TelegramApiException {
+    public void handleMessage(Message message) throws TelegramApiException {
         String chatMessageId = message.getChatId().toString();
 
         if (message.hasText()) {
-            System.out.println(message.getText());
-            if (message.getText().equals("/start")) {
+            String userText = message.getText();
+            System.out.println(userText);
+            if (userText.equals("/start")) {
                 MainMenu mainMenu = new MainMenu();
-
+                mainMenu.mainMenuButtons(message);
+            } else if (isDigit(userText)) {
+                int userTime = Integer.parseInt(userText);
+                if (isTimeAvailable(userTime)) {
+                    execute(SendMessage.builder()
+                            .text(String.format(VALID_TIME, userTime))
+                            .chatId(chatMessageId)
+                            .build());
+                } else {
+                    execute(SendMessage.builder()
+                            .text(String.format(INVALID_TIME, userTime))
+                            .chatId(chatMessageId)
+                            .build());
+                }
+            } else if (userText.equals(TURN_OFF_NOTIFICATION)) {
                 execute(SendMessage.builder()
-                        .text("Вітаю! Цей бот допоможе Вам дізнатися актуальний курс валют")
+                        .text("Оповіщення вимкнені")
                         .chatId(chatMessageId)
-                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(mainMenu.mainMenuButtons()).build())
                         .build());
             } else {
                 execute(SendMessage.builder()
@@ -121,34 +122,6 @@ public class TelegramBot extends Bot {
                         .build());
             }
         }
-    }
-
-    public void setButtons(SendMessage sendMessage) {
-//        // Создаем клавиуатуру
-//        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-//        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-//        replyKeyboardMarkup.setSelective(true);
-//        replyKeyboardMarkup.setResizeKeyboard(true);
-//        replyKeyboardMarkup.setOneTimeKeyboard(false);
-//
-//        // Создаем список строк клавиатуры
-//        List<KeyboardRow> keyboard = new ArrayList<>();
-//
-//        // Первая строчка клавиатуры
-//        KeyboardRow keyboardFirstRow = new KeyboardRow();
-//        // Добавляем кнопки в первую строчку клавиатуры
-//        keyboardFirstRow.add(new KeyboardButton("Ку"));
-//
-//        // Вторая строчка клавиатуры
-//        KeyboardRow keyboardSecondRow = new KeyboardRow();
-//        // Добавляем кнопки во вторую строчку клавиатуры
-//        keyboardSecondRow.add(new KeyboardButton("Допомога"));
-//
-//        // Добавляем все строчки клавиатуры в список
-//        keyboard.add(keyboardFirstRow);
-//        keyboard.add(keyboardSecondRow);
-//        // и устанваливаем этот список нашей клавиатуре
-//        replyKeyboardMarkup.setKeyboard(keyboard);
     }
 
     @Override
