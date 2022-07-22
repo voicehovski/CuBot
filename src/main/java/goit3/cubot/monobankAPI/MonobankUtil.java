@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
+import goit3.cubot.CurrencyInfo;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,20 +19,12 @@ import java.util.Optional;
 public class MonobankUtil extends Bank {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final Gson GSON = new Gson();
-    private static final String MONOLINK = "https://api.monobank.ua/bank/currency";
+    private static final String APILINK = "https://api.monobank.ua/bank/currency";
 
     @Override
-    public String getCurrencyExchange(Currency valute) {
-        List<CurrencyExchange> list = getMonobankCurrencyInfo();
-        Optional<CurrencyExchange> result = list.stream()
-                .filter(e -> getCurrencyByCode(e.getCurrencyCodeA()).toString().equals(valute.name()))
-                .findFirst();
-        return result.toString();
-    }
-
-    private List<CurrencyExchange> getMonobankCurrencyInfo() {
+    public List<CurrencyInfo> getCurrencyList() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(MONOLINK))
+                .uri(URI.create(APILINK))
                 .GET()
                 .build();
         HttpResponse<String> response = null;
@@ -44,12 +37,11 @@ public class MonobankUtil extends Bank {
         }.getType());
     }
 
-    private java.util.Currency getCurrencyByCode(int code) {
-        for(java.util.Currency currency : java.util.Currency.getAvailableCurrencies()) {
-            if(currency.getNumericCode() == code) {
-                return currency;
-            }
-        }
-        throw new IllegalArgumentException("Unkown currency code: " + code);
+    @Override
+    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+        Optional<CurrencyInfo> result = getCurrencyList().stream()
+                .filter(x -> x.getCode().equals(currencyCode.name()))
+                .findFirst();
+        return result.orElseThrow(RuntimeException::new);
     }
 }

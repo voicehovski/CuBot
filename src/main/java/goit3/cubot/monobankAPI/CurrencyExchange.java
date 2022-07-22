@@ -1,11 +1,13 @@
 package goit3.cubot.monobankAPI;
 
-public class CurrencyExchange {
-    private int currencyCodeA;
-    private int currencyCodeB;
-    private long date;
-    private float rateBuy;
-    private float rateSell;
+import goit3.cubot.CurrencyInfo;
+
+public class CurrencyExchange implements CurrencyInfo {
+    private final int currencyCodeA;
+    private final int currencyCodeB;
+    private final long date;
+    private final float rateBuy;
+    private final float rateSell;
 
     public CurrencyExchange(int currencyCodeA, int currencyCodeB, long date, float rateBuy, float rateSell) {
         this.currencyCodeA = currencyCodeA;
@@ -13,26 +15,6 @@ public class CurrencyExchange {
         this.date = date;
         this.rateBuy = rateBuy;
         this.rateSell = rateSell;
-    }
-
-    public int getCurrencyCodeA() {
-        return currencyCodeA;
-    }
-
-    public int getCurrencyCodeB() {
-        return currencyCodeB;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public float getRateBuy() {
-        return rateBuy;
-    }
-
-    public float getRateSell() {
-        return rateSell;
     }
 
     @Override
@@ -44,5 +26,34 @@ public class CurrencyExchange {
                 ", rateBuy=" + rateBuy +
                 ", rateSell=" + rateSell +
                 '}';
+    }
+
+    @Override
+    public String getCode() {
+        return getCurrencyNameByISOCode(currencyCodeA);
+    }
+
+    @Override
+    public double getBuy() {
+        return rateBuy;
+    }
+
+    @Override
+    public double getSale() {
+        return rateSell;
+    }
+
+    @Override
+    public long getDateAndTime() {
+        return date;
+    }
+
+    public String getCurrencyNameByISOCode(int code) {
+        for (java.util.Currency currency : java.util.Currency.getAvailableCurrencies()) {
+            if (currency.getNumericCode() == code) {
+                return currency.toString();
+            }
+        }
+        throw new IllegalArgumentException("Unkown currency code: " + code);
     }
 }
