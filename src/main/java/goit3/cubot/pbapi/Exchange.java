@@ -77,11 +77,11 @@ class Exchange implements CurrencyInfo {
 
     @Override
     public String toString() {
-        return "Курс в Приватбанк " +
+        return "PrivatBank: " +
                 ccy + '/' + base_ccy +
                 System.lineSeparator() +
-                "Покупка: " + buy +
+                "Buy: " + buy +
                 System.lineSeparator() +
-                "Продажа: " + sale;
+                "Sale: " + sale;
     }
 }
