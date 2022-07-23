@@ -1,9 +1,13 @@
 package goit3.cubot.nbuapi;
 
 class NBUCurrency {
+    // Код
     private int r030;
+    // Наименование
     private String txt;
+    // Курс
     private double rate;
+    // Международный трехбуквенный код
     private String cc;
     private String exchangedate;
 
