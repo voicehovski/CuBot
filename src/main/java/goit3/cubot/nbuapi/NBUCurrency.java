@@ -1,6 +1,8 @@
 package goit3.cubot.nbuapi;
 
-class NBUCurrency {
+import goit3.cubot.CurrencyInfo;
+
+class NBUCurrency implements CurrencyInfo {
     // Код
     private int r030;
     // Наименование
@@ -40,5 +42,25 @@ class NBUCurrency {
                 ", cc='" + cc + '\'' +
                 ", exchangedate='" + exchangedate + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getCode() {
+        return cc;
+    }
+
+    @Override
+    public double getBuy() {
+        return rate;
+    }
+
+    @Override
+    public double getSale() {
+        return rate;
+    }
+
+    @Override
+    public long getDateAndTime() {
+        return System.currentTimeMillis();
     }
 }

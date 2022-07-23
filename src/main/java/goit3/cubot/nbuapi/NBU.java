@@ -14,16 +14,14 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * See API details here https://bank.gov.ua/ua/open-data/api-dev
  * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
-    // 2 ---------------------------------------------------------\
-    // Внести нужный url
     private static final String CURRENCY_LIST_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?&json";
-    // 2 ---------------------------------------------------------/
 
     public CurrencyInfo parseResponse(StringBuffer response) {
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
@@ -56,27 +54,17 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
-        // 3 ---------------------------------------------------------\
         StringBuffer jsonString = getJsonString();
-
-        // Вот такой замысловатый код нужен если в json-е массив элементов
-        // В parseResponse ты обрезал строку. Наверно здесь тоже понадобится
         java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
         }.getType();
         Gson gson = new Gson();
         List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
 
-        // Преобразовать List<NBUCurrency> в List<CurrencyInfo> и вернуть
-        // 3 ---------------------------------------------------------/
-        return null;
+        return currencyList.stream().map(cl -> (CurrencyInfo) cl).collect(Collectors.toList());
     }
 
     @Override
     public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
-
-
-        // 1 ---------------------------------------------------------\
-        // Этот код ты выносишь в метод getJsonString
         HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
 
         int responseCode;
@@ -92,9 +80,7 @@ public class NBU extends Bank {
         } else {
             throw new RuntimeException("Bank has returned error code " + responseCode);
         }
-        // 1 ---------------------------------------------------------/
 
-        // Содержимое parseResponse можно прямо здесь разместить - дело вкуса
         return parseResponse(response);
     }
 
