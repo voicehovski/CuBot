@@ -2,7 +2,6 @@ package goit3.cubot.nbuapi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
@@ -14,19 +13,27 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 /*
-* See API details here https://bank.gov.ua/ua/open-data/api-dev
-* */
+ * See API details here https://bank.gov.ua/ua/open-data/api-dev
+ * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
+    // 2 ---------------------------------------------------------\
+    // Внести нужный url
+    private static final String CURRENCY_LIST_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?&json";
+    // 2 ---------------------------------------------------------/
 
-    public CurrencyInfo parseResponse(String response) {
-        NBUCurrency currencyObj = new Gson().fromJson(response.substring(1, response.length() - 1), NBUCurrency.class);
+    public CurrencyInfo parseResponse(StringBuffer response) {
+        String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
+        Gson gson = new Gson();
+        NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
 
         return new CurrencyInfo() {
 
@@ -54,15 +61,27 @@ public class NBU extends Bank {
 
     @Override
     public List<CurrencyInfo> getCurrencyList() {
-//        List<NBUCurrency> nbuCurrencyList = new Gson().fromJson(response, new TypeToken<List<NBUCurrency>>() {
-//        }.getType());
-//
-//        return nbuCurrencyList.stream().map(ncl -> (CurrencyInfo) ncl).collect(Collectors.toList());
+        // 3 ---------------------------------------------------------\
+        StringBuffer jsonString = getJsonString(CURRENCY_LIST_URL);
+
+        // Вот такой замысловатый код нужен если в json-е массив элементов
+        // В parseResponse ты обрезал строку. Наверно здесь тоже понадобится
+        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
+        }.getType();
+        Gson gson = new Gson();
+        List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
+
+        // Преобразовать List<NBUCurrency> в List<CurrencyInfo> и вернуть
+        // 3 ---------------------------------------------------------/
         return null;
     }
 
     @Override
     public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+
+
+        // 1 ---------------------------------------------------------\
+        // Этот код ты выносишь в метод getJsonString
         HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
 
         int responseCode;
@@ -72,14 +91,21 @@ public class NBU extends Bank {
             throw new RuntimeException("Can`t get response code");
         }
 
-        String response;
+        StringBuffer response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = getResponseAsString(connection);
         } else {
             throw new RuntimeException("Bank has returned error code " + responseCode);
         }
+        // 1 ---------------------------------------------------------/
 
+        // Содержимое parseResponse можно прямо здесь разместить - дело вкуса
         return parseResponse(response);
+    }
+
+    private StringBuffer getJsonString(String request) {
+
+        return null;
     }
 
     private HttpURLConnection createConnection(String urlString) {
@@ -99,7 +125,7 @@ public class NBU extends Bank {
         return connection;
     }
 
-    private String getResponseAsString(HttpURLConnection connection) {
+    private StringBuffer getResponseAsString(HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -120,6 +146,6 @@ public class NBU extends Bank {
                 throw new RuntimeException("Can`t close network stream");
             }
         }
-        return response.toString();
+        return response;
     }
 }
