@@ -1,6 +1,11 @@
 # Default ignored files
 /.idea/shelf/
 /workspace.xml
+gradlew
+gradlew.bat
+.gradle/
+gradle/
+build/
 .idea
 .iws
 .iml
