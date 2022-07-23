@@ -1,7 +1,6 @@
 package goit3.cubot.bot_api.bot_buttons;
 
 import goit3.cubot.Currency;
-import goit3.cubot.bot_api.currency_logic.BotService;
 import goit3.cubot.bot_api.TelegramBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -15,13 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static goit3.cubot.Currency.EUR;
-import static goit3.cubot.Currency.USD;
-
 public class CurrenciesButtons extends TelegramBot {
-    private final BotService currencyBotService = BotService.getInstance();
-    String usd = USD.name();
-    String eur = EUR.name();
+//    private final BotService currencyBotService = BotService.getInstance();
+//    String usd = USD.name();
+//    String eur = EUR.name();
 
     public void getCurrenciesList(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
@@ -52,32 +48,31 @@ public class CurrenciesButtons extends TelegramBot {
         Currency newCurrency = Currency.valueOf(callbackQuery.getData());
 //        currencyBotService.setCurrency(chatId, newCurrency);
 //        currencyBotService.getCurrency(chatId);
-
-        String chosenCurrency = newCurrency.name();
+//        String chosenCurrency = newCurrency.name();
 
         List<List<InlineKeyboardButton>> currenciesButtons = new ArrayList<>();
-//        for (Currency currency : Currency.values()) {
-//            currenciesButtons.add(Arrays.asList(
-//                    InlineKeyboardButton.builder()
-//                            .text(getCurrencyButton(newCurrency, currency))
-//                            .callbackData(currency.name())
-//                            .build()));
-//        }
-        if (chosenCurrency.equals(EUR.name())) {
-            eur = "✅ " + chosenCurrency;
-        } else if (chosenCurrency.equals(USD.name())) {
-            usd = "✅ " + chosenCurrency;
+        for (Currency currency : Currency.values()) {
+            currenciesButtons.add(Arrays.asList(
+                    InlineKeyboardButton.builder()
+                            .text(getCurrencyButton(newCurrency, currency))
+                            .callbackData(currency.name())
+                            .build()));
         }
-        currenciesButtons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .text(eur)
-                        .callbackData(EUR.name())
-                        .build()));
-        currenciesButtons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .text(usd)
-                        .callbackData(USD.name())
-                        .build()));
+//        if (chosenCurrency.equals(EUR.name())) {
+//            eur = "✅ " + chosenCurrency;
+//        } else if (chosenCurrency.equals(USD.name())) {
+//            usd = "✅ " + chosenCurrency;
+//        }
+//        currenciesButtons.add(Arrays.asList(
+//                InlineKeyboardButton.builder()
+//                        .text(eur)
+//                        .callbackData(EUR.name())
+//                        .build()));
+//        currenciesButtons.add(Arrays.asList(
+//                InlineKeyboardButton.builder()
+//                        .text(usd)
+//                        .callbackData(USD.name())
+//                        .build()));
         try {
             execute(EditMessageReplyMarkup.builder()
                     .chatId(chatMessageId)
