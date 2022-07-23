@@ -15,8 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static goit3.cubot.Currency.EUR;
+import static goit3.cubot.Currency.USD;
+
 public class CurrenciesButtons extends TelegramBot {
     private final BotService currencyBotService = BotService.getInstance();
+    String usd = USD.name();
+    String eur = EUR.name();
 
     public void getCurrenciesList(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
@@ -45,17 +50,34 @@ public class CurrenciesButtons extends TelegramBot {
         Long chatId = message.getChatId();
         String chatMessageId = chatId.toString();
         Currency newCurrency = Currency.valueOf(callbackQuery.getData());
-        currencyBotService.setCurrency(chatId, newCurrency);
+//        currencyBotService.setCurrency(chatId, newCurrency);
+//        currencyBotService.getCurrency(chatId);
+
+        String chosenCurrency = newCurrency.name();
 
         List<List<InlineKeyboardButton>> currenciesButtons = new ArrayList<>();
-        Currency currentCurrency = currencyBotService.getCurrency(chatId);
-        for (Currency currency : Currency.values()) {
-            currenciesButtons.add(Arrays.asList(
-                    InlineKeyboardButton.builder()
-                            .text(getCurrencyButton(currentCurrency, currency))
-                            .callbackData(currency.name())
-                            .build()));
+//        for (Currency currency : Currency.values()) {
+//            currenciesButtons.add(Arrays.asList(
+//                    InlineKeyboardButton.builder()
+//                            .text(getCurrencyButton(newCurrency, currency))
+//                            .callbackData(currency.name())
+//                            .build()));
+//        }
+        if (chosenCurrency.equals(EUR.name())) {
+            eur = "✅ " + chosenCurrency;
+        } else if (chosenCurrency.equals(USD.name())) {
+            usd = "✅ " + chosenCurrency;
         }
+        currenciesButtons.add(Arrays.asList(
+                InlineKeyboardButton.builder()
+                        .text(eur)
+                        .callbackData(EUR.name())
+                        .build()));
+        currenciesButtons.add(Arrays.asList(
+                InlineKeyboardButton.builder()
+                        .text(usd)
+                        .callbackData(USD.name())
+                        .build()));
         try {
             execute(EditMessageReplyMarkup.builder()
                     .chatId(chatMessageId)
@@ -66,6 +88,7 @@ public class CurrenciesButtons extends TelegramBot {
             throw new RuntimeException(e);
         }
     }
+
     protected String getCurrencyButton(Currency saved, Currency current) {
         return saved == current ? "✅ " + current : current.name();
     }
