@@ -13,12 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 /*
  * See API details here https://bank.gov.ua/ua/open-data/api-dev
@@ -62,7 +57,7 @@ public class NBU extends Bank {
     @Override
     public List<CurrencyInfo> getCurrencyList() {
         // 3 ---------------------------------------------------------\
-        StringBuffer jsonString = getJsonString(CURRENCY_LIST_URL);
+        StringBuffer jsonString = getJsonString();
 
         // Вот такой замысловатый код нужен если в json-е массив элементов
         // В parseResponse ты обрезал строку. Наверно здесь тоже понадобится
@@ -103,9 +98,23 @@ public class NBU extends Bank {
         return parseResponse(response);
     }
 
-    private StringBuffer getJsonString(String request) {
+    private StringBuffer getJsonString() {
+        HttpURLConnection connection = createConnection(CURRENCY_LIST_URL);
 
-        return null;
+        int responseCode;
+        try {
+            responseCode = connection.getResponseCode();
+        } catch (IOException ioe) {
+            throw new RuntimeException("Can`t get response code");
+        }
+
+        StringBuffer response;
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            response = getResponseAsString(connection);
+        } else {
+            throw new RuntimeException("Bank has returned error code " + responseCode);
+        }
+        return response;
     }
 
     private HttpURLConnection createConnection(String urlString) {

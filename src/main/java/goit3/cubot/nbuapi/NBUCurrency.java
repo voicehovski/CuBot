@@ -30,4 +30,15 @@ class NBUCurrency {
     public String getExchangedate() {
         return exchangedate;
     }
+
+    @Override
+    public String toString() {
+        return "NBUCurrency{" +
+                "r030=" + r030 +
+                ", txt='" + txt + '\'' +
+                ", rate=" + rate +
+                ", cc='" + cc + '\'' +
+                ", exchangedate='" + exchangedate + '\'' +
+                '}';
+    }
 }
