@@ -21,13 +21,13 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 /*
-* See API details here https://bank.gov.ua/ua/open-data/api-dev
-* */
+ * See API details here https://bank.gov.ua/ua/open-data/api-dev
+ * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
     // 2 ---------------------------------------------------------\
     // Внести нужный url
-    private static final String CURRENCY_LIST_URL = "";
+    private static final String CURRENCY_LIST_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?&json";
     // 2 ---------------------------------------------------------/
 
     public CurrencyInfo parseResponse(StringBuffer response) {
@@ -66,9 +66,10 @@ public class NBU extends Bank {
 
         // Вот такой замысловатый код нужен если в json-е массив элементов
         // В parseResponse ты обрезал строку. Наверно здесь тоже понадобится
-        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>(){} .getType (  );
+        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
+        }.getType();
         Gson gson = new Gson();
-        List<NBUCurrency> currencyList = gson .fromJson ( jsonString .toString(), listElementType );
+        List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
 
         // Преобразовать List<NBUCurrency> в List<CurrencyInfo> и вернуть
         // 3 ---------------------------------------------------------/
@@ -102,12 +103,12 @@ public class NBU extends Bank {
         return parseResponse(response);
     }
 
-    private StringBuffer getJsonString (String request) {
+    private StringBuffer getJsonString(String request) {
 
         return null;
     }
 
-    private HttpURLConnection createConnection (String urlString) {
+    private HttpURLConnection createConnection(String urlString) {
         HttpURLConnection connection;
         try {
             URL url = new URL(urlString);
@@ -124,7 +125,7 @@ public class NBU extends Bank {
         return connection;
     }
 
-    private StringBuffer getResponseAsString (HttpURLConnection connection) {
+    private StringBuffer getResponseAsString(HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
