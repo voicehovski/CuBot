@@ -2,10 +2,6 @@ package goit3.cubot.nbuapi;
 
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
-import goit3.cubot.CurrencyInfo;
-
-import java.util.Arrays;
-
 
 public class NBUTest {
     public static void main(String[] args) {
