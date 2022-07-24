@@ -5,6 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
+import goit3.cubot.exceptions.BadServerResponceException;
+import goit3.cubot.exceptions.NetworkProblemException;
+import goit3.cubot.exceptions.UnsupportedCurrencyException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,14 +30,18 @@ public class MonobankUtil extends Bank {
                 .uri(URI.create(APILINK))
                 .GET()
                 .build();
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         try {
             response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            System.err.println("monobank API is not available");
+            throw new NetworkProblemException();
         }
-        return GSON.fromJson(Objects.requireNonNull(response).body(), new TypeToken<List<CurrencyExchange>>() {
-        }.getType());
+        if (response.statusCode() == 200) {
+            return GSON.fromJson(Objects.requireNonNull(response).body(), new TypeToken<List<CurrencyExchange>>() {
+            }.getType());
+        } else throw new BadServerResponceException(response.statusCode() + " error from " + APILINK,
+                Integer.toString(response.statusCode()));
+
     }
 
     @Override
@@ -42,6 +49,7 @@ public class MonobankUtil extends Bank {
         Optional<CurrencyInfo> result = getCurrencyList().stream()
                 .filter(x -> x.getCode().equals(currencyCode.name()))
                 .findFirst();
-        return result.orElseThrow(RuntimeException::new);
+        return result.orElseThrow(() -> new UnsupportedCurrencyException("currency is not found in monobank API"
+                + currencyCode.name(), currencyCode.name()));
     }
 }
