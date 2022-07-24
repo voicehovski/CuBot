@@ -5,6 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
+import goit3.cubot.exceptions.BadServerResponceException;
+import goit3.cubot.exceptions.NetworkProblemException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,14 +73,14 @@ public class NBU extends Bank {
         try {
             responseCode = connection.getResponseCode();
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t get response code");
+            throw new NetworkProblemException();
         }
 
         StringBuffer response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = getResponseAsString(connection);
         } else {
-            throw new RuntimeException("Bank has returned error code " + responseCode);
+            throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
         }
 
         return parseResponse(response);
@@ -91,14 +93,14 @@ public class NBU extends Bank {
         try {
             responseCode = connection.getResponseCode();
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t get response code");
+            throw new NetworkProblemException();
         }
 
         StringBuffer response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = getResponseAsString(connection);
         } else {
-            throw new RuntimeException("Bank has returned error code " + responseCode);
+            throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
         }
         return response;
     }
@@ -110,12 +112,8 @@ public class NBU extends Bank {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
-        } catch (ProtocolException e) {
-            throw new RuntimeException("Incorrect protocol");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Incorrect URL");
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create network connection");
+        } catch (IOException ioe) {
+            throw new NetworkProblemException();
         }
         return connection;
     }
@@ -131,14 +129,14 @@ public class NBU extends Bank {
                 response.append(inputLine);
             }
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t read from network");
+            throw new NetworkProblemException();
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
             } catch (IOException ioe) {
-                throw new RuntimeException("Can`t close network stream");
+                throw new NetworkProblemException();
             }
         }
         return response;
