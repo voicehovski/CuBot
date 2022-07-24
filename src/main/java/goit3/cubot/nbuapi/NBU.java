@@ -83,6 +83,8 @@ public class NBU extends Bank {
             throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
         }
 
+        connection.disconnect();
+
         return parseResponse(response);
     }
 
@@ -102,6 +104,9 @@ public class NBU extends Bank {
         } else {
             throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
         }
+
+        connection.disconnect();
+
         return response;
     }
 
