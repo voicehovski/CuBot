@@ -35,12 +35,12 @@ class NBUCurrency implements CurrencyInfo {
 
     @Override
     public String toString() {
-        return "NBUCurrency{" +
-                "r030=" + r030 +
-                ", txt='" + txt + '\'' +
-                ", rate=" + rate +
-                ", cc='" + cc + '\'' +
-                ", exchangedate='" + exchangedate + '\'' +
+        return "NBUCurrency {" +
+                "r030 = " + r030 +
+                ", txt = '" + txt + '\'' +
+                ", rate = " + rate +
+                ", cc = '" + cc + '\'' +
+                ", exchangedate = '" + exchangedate + '\'' +
                 '}';
     }
 

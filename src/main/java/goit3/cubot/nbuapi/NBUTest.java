@@ -19,5 +19,6 @@ public class NBUTest {
 
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + "Покупка: " + usdRate);
         System.out.println("Курс в НБУ: USD/UAH" + System.lineSeparator() + "Продажа: " + usdRate);
+        System.out.println(bankService.getCurrencyList());
     }
 }
