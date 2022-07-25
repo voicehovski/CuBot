@@ -1,28 +1,42 @@
 package goit3.cubot.nbuapi;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import goit3.cubot.Bank;
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
+import goit3.cubot.exceptions.BadServerResponceException;
+import goit3.cubot.exceptions.NetworkProblemException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
-* See API details here https://bank.gov.ua/ua/open-data/api-dev
-* */
+ * See API details here https://bank.gov.ua/ua/open-data/api-dev
+ * */
 public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
+    private static final String CURRENCY_LIST_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?&json";
 
-    public CurrencyInfo parseResponse(StringBuffer response) {
+    @Override
+    public List<CurrencyInfo> getCurrencyList() {
+        StringBuffer jsonString = getJsonString(CURRENCY_LIST_URL);
+        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
+        }.getType();
+        Gson gson = new Gson();
+        List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
+
+        return currencyList.stream().map(cl -> (CurrencyInfo) cl).collect(Collectors.toList());
+    }
+
+    @Override
+    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+        StringBuffer response = getJsonString(CURRENCY_BY_NAME + currencyCode + "&json");
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
         Gson gson = new Gson();
         NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
@@ -51,50 +65,42 @@ public class NBU extends Bank {
         };
     }
 
-    @Override
-    public List<CurrencyInfo> getCurrencyList() {
-        return null;
-    }
+    private StringBuffer getJsonString(String request) {
+        HttpURLConnection connection = createConnection(request);
 
-    @Override
-    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
-        HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
-
-        int responseCode = 0;
+        int responseCode;
         try {
             responseCode = connection.getResponseCode();
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t get responce code");
+            throw new NetworkProblemException();
         }
 
-        StringBuffer response = null;
+        StringBuffer response;
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            response = getResponceAsString(connection);
+            response = getResponseAsString(connection);
         } else {
-            throw new RuntimeException("Bank has returned error code " + responseCode);
+            throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
         }
 
-        return parseResponse(response);
+        connection.disconnect();
+
+        return response;
     }
 
-    private HttpURLConnection createConnection (String urlString) {
-        HttpURLConnection connection = null;
+    private HttpURLConnection createConnection(String urlString) {
+        HttpURLConnection connection;
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
-        } catch (ProtocolException e) {
-            throw new RuntimeException("Incorrect protocol");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Incorrect URL");
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create network connection");
+        } catch (IOException ioe) {
+            throw new NetworkProblemException();
         }
         return connection;
     }
 
-    private StringBuffer getResponceAsString (HttpURLConnection connection) {
+    private StringBuffer getResponseAsString(HttpURLConnection connection) {
         BufferedReader in = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -105,12 +111,14 @@ public class NBU extends Bank {
                 response.append(inputLine);
             }
         } catch (IOException ioe) {
-            throw new RuntimeException("Can`t read from network");
+            throw new NetworkProblemException();
         } finally {
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException ioe) {
-                throw new RuntimeException("Can`t close network stream");
+                throw new NetworkProblemException();
             }
         }
         return response;
