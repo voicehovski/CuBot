@@ -8,24 +8,15 @@ public class CurrencyExchange implements CurrencyInfo {
     private final long date;
     private final float rateBuy;
     private final float rateSell;
+    private final float rateCross;
 
-    public CurrencyExchange(int currencyCodeA, int currencyCodeB, long date, float rateBuy, float rateSell) {
+    public CurrencyExchange(int currencyCodeA, int currencyCodeB, long date, float rateBuy, float rateSell, float rateCross) {
         this.currencyCodeA = currencyCodeA;
         this.currencyCodeB = currencyCodeB;
         this.date = date;
         this.rateBuy = rateBuy;
         this.rateSell = rateSell;
-    }
-
-    @Override
-    public String toString() {
-        return "CurrencyExchange{" +
-                "currencyCodeA=" + currencyCodeA +
-                ", currencyCodeB=" + currencyCodeB +
-                ", date=" + date +
-                ", rateBuy=" + rateBuy +
-                ", rateSell=" + rateSell +
-                '}';
+        this.rateCross = rateCross;
     }
 
     @Override
