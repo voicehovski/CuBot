@@ -12,8 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +23,20 @@ public class NBU extends Bank {
     private static final String CURRENCY_BY_NAME = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=";
     private static final String CURRENCY_LIST_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?&json";
 
-    public CurrencyInfo parseResponse(StringBuffer response) {
+    @Override
+    public List<CurrencyInfo> getCurrencyList() {
+        StringBuffer jsonString = getJsonString(CURRENCY_LIST_URL);
+        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
+        }.getType();
+        Gson gson = new Gson();
+        List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
+
+        return currencyList.stream().map(cl -> (CurrencyInfo) cl).collect(Collectors.toList());
+    }
+
+    @Override
+    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
+        StringBuffer response = getJsonString(CURRENCY_BY_NAME + currencyCode + "&json");
         String toCurrency = String.valueOf(response).substring(1, response.length() - 1);
         Gson gson = new Gson();
         NBUCurrency currencyObj = gson.fromJson(toCurrency, NBUCurrency.class);
@@ -54,42 +65,8 @@ public class NBU extends Bank {
         };
     }
 
-    @Override
-    public List<CurrencyInfo> getCurrencyList() {
-        StringBuffer jsonString = getJsonString();
-        java.lang.reflect.Type listElementType = new TypeToken<List<NBUCurrency>>() {
-        }.getType();
-        Gson gson = new Gson();
-        List<NBUCurrency> currencyList = gson.fromJson(jsonString.toString(), listElementType);
-
-        return currencyList.stream().map(cl -> (CurrencyInfo) cl).collect(Collectors.toList());
-    }
-
-    @Override
-    public CurrencyInfo getCurrencyByCode(Currency currencyCode) {
-        HttpURLConnection connection = createConnection(CURRENCY_BY_NAME + currencyCode + "&json");
-
-        int responseCode;
-        try {
-            responseCode = connection.getResponseCode();
-        } catch (IOException ioe) {
-            throw new NetworkProblemException();
-        }
-
-        StringBuffer response;
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            response = getResponseAsString(connection);
-        } else {
-            throw new BadServerResponceException("Bank has returned error code ", String.valueOf(responseCode));
-        }
-
-        connection.disconnect();
-
-        return parseResponse(response);
-    }
-
-    private StringBuffer getJsonString() {
-        HttpURLConnection connection = createConnection(CURRENCY_LIST_URL);
+    private StringBuffer getJsonString(String request) {
+        HttpURLConnection connection = createConnection(request);
 
         int responseCode;
         try {
