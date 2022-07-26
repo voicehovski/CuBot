@@ -43,4 +43,9 @@ public class NBU {
 
         return currencyObj.getRate();
     }
+
+    @Override
+    public String toString(){
+        return "NBU";
+    }
 }

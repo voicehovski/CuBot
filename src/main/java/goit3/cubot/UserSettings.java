@@ -1,29 +1,32 @@
 package goit3.cubot;
 
-public class UserSettings {
-    private int chatId;
+import java.io.Serializable;
+import java.util.List;
+
+
+public class UserSettings implements Serializable {
+    private long chatId;
     private int roundDigit;
     private Bank bank;
     private int reminderTime;
-    private List<Сurrency> currencies;
+    private List<Currency> currencies;
 
     public UserSettings(){
-        chatId = 0;
         roundDigit = 2;
-        //  bank = privatBank
+        bank = new PrivatBankService();
         reminderTime = 9;
-        currencies.add(Сurrency.USD);
+        currencies.add(Currency.USD);
     }
 
-//    public UserSettings(int chatId, int roundDigit, Bank bank,int reminderTime, List<Currency> currencies){
-//        this.chatId = chatId;
-//        this.roundDigit = roundDigit;
-//        this.bank = bank;
-//        this.reminderTime = reminderTime;
-//        this.currencies = currencies;
-//    }
+    public UserSettings(long chatId, int reminderTime, Bank bank, int roundDigit, List<Currency> currencies){
+        this.bank = bank;
+        this.chatId = chatId;
+        this.currencies = currencies;
+        this.reminderTime = reminderTime;
+        this.roundDigit = roundDigit;
+    }
 
-    public UserSettings(int chatId, UserSettings settings){
+    public UserSettings(long chatId, UserSettings settings){
         this.chatId = chatId;
         this.reminderTime = settings.reminderTime;
         this.currencies = settings.currencies;
@@ -31,19 +34,11 @@ public class UserSettings {
         this.bank = settings.bank;
     }
 
-//    UserSettings(){
-//        this.chatId = getChatId();
-//        this.roundDigit = getRoundDigit();
-//        this.bank = getBank();
-//        this.reminderTime = getReminderTime();
-//        this.currencies = getCurrencies();
-//    }
-
-    public int getChatId() {
+    public long getChatId() {
         return chatId;
     }
 
-    public void setChatId(int chatId) {
+    public void setChatId(long chatId) {
         this.chatId = chatId;
     }
 
@@ -71,11 +66,22 @@ public class UserSettings {
         this.reminderTime = reminderTime;
     }
 
-    public List<Сurrency> getCurrencies() {
+    public List<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Сurrency> currencies) {
+    public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSettings{" +
+                "chatId=" + chatId +
+                ", roundDigit=" + roundDigit +
+                ", bank=" + bank +
+                ", reminderTime=" + reminderTime +
+                ", currencies=" + currencies +
+                '}';
     }
 }

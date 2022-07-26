@@ -1,5 +1,10 @@
 package goit3.cubot;
 
-public abstract class Bank {
-    public abstract String getCurrencyExchange(Currency valute);
+import java.util.List;
+
+public interface Bank {
+    List<CurrencyInfo> getCurrencyList();
+    CurrencyInfo getCurrencyByCode(Currency currencyCode);
+
+
 }
