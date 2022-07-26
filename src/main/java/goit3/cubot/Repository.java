@@ -23,13 +23,22 @@ public class Repository {
 
     public static void delete(long chat_id) throws IOException {
         List<UserSettings> userSettings = InMemoryListRepository.readFile();
-        if (userSettings.contains(chat_id)){
-            userSettings.remove(chat_id);
-            InMemoryListRepository.writeFile(userSettings);
+//        if (userSettings.contains(chat_id)){
+//            userSettings.remove(chat_id);
+//            InMemoryListRepository.writeFile(userSettings);
+//        }
+//        else {
+//            System.out.println("Oops...");
+//        }
+        try {
+            if (userSettings.contains(chat_id)){
+                userSettings.remove(chat_id);
+                InMemoryListRepository.writeFile(userSettings);
+            }
+        }catch (Exception e){
+            System.out.println("User with " + chat_id + " id doesn't exist");
         }
-        else {
-            System.out.println("Oops...");
-        }
+
     }
 
     public static UserSettings getSetting(int chat_id) throws FileNotFoundException {
