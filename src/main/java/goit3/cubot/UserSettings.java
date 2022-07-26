@@ -1,18 +1,20 @@
 package goit3.cubot;
 
+import java.util.List;
+
 public class UserSettings {
     private int chatId;
     private int roundDigit;
     private Bank bank;
     private int reminderTime;
-    private List<Сurrency> currencies;
+    private List<Currency> currencies;
 
     public UserSettings(){
         chatId = 0;
         roundDigit = 2;
         //  bank = privatBank
         reminderTime = 9;
-        currencies.add(Сurrency.USD);
+        currencies.add(Currency.USD);
     }
 
 //    public UserSettings(int chatId, int roundDigit, Bank bank,int reminderTime, List<Currency> currencies){
@@ -71,11 +73,11 @@ public class UserSettings {
         this.reminderTime = reminderTime;
     }
 
-    public List<Сurrency> getCurrencies() {
+    public List<Currency> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Сurrency> currencies) {
+    public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
     }
 }

@@ -11,10 +11,10 @@ public abstract class Bank {
      *
      * @throws RuntimeException if problem occurs while request processing
      */
-    public abstract List<CurrencyInfo> getCurrencyList() throws IOException, InterruptedException;
+    public abstract List<CurrencyInfo> getCurrencyList();
 
     /**
      * @throws RuntimeException if problem occurs while request processing or no currency with such code
      */
-    public abstract CurrencyInfo getCurrencyByCode(Currency currencyCode) throws IOException, InterruptedException;
+    public abstract CurrencyInfo getCurrencyByCode(Currency currencyCode);
 }
