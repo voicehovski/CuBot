@@ -11,7 +11,7 @@ public class Repository {
 
         List<UserSettings> userSettings = InMemoryListRepository.readFile();
         if (!userSettings.contains(chat_id)){
-            userSettings.add( chat_id,setting);
+            userSettings.add( setting);
             InMemoryListRepository.writeFile(userSettings);
         }
         else {
@@ -36,5 +36,5 @@ public class Repository {
         List<UserSettings> userSettings = InMemoryListRepository.readFile();
         if (userSettings.contains(chat_id)) return userSettings.get(chat_id);
         else return null;
-    };
+    }
 }
