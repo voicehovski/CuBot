@@ -2,48 +2,38 @@ package goit3.cubot;
 import java.io.*;
 import java.util.*;
 
+
 public class Repository {
-    private static Map<Long, UserSettings> userSettingsMap = new HashMap<>();
-    private final static String ABSOLUT_PATH = ".\\src\\main\\resources\\users.json";
+    private static List<UserSettings> userSettingsList = new ArrayList<>();
+    private final static String ABSOLUT_PATH = ".\\CuBot\\src\\main\\java\\goit3\\cubot\\users.json";
 
 
     public static void add(int chat_id, UserSettings setting) throws Exception {
-
         List<UserSettings> userSettings = InMemoryListRepository.readFile();
-        if (!userSettings.contains(chat_id)){
-            userSettings.add( setting);
-            InMemoryListRepository.writeFile(userSettings);
-        }
-        else {
-            System.out.println("Oops...");
+        try {
+            if (!userSettings.contains(chat_id)){
+                userSettingsList.add(setting);
+                writeFile(userSettingsList);
+            }
+        }catch (Exception e){
+            System.out.println("User with " + chat_id + " id already exists");
         }
 
     }
 
 
     public static void delete(long chat_id) throws IOException {
-        List<UserSettings> userSettings = InMemoryListRepository.readFile();
-//        if (userSettings.contains(chat_id)){
-//            userSettings.remove(chat_id);
-//            InMemoryListRepository.writeFile(userSettings);
-//        }
-//        else {
-//            System.out.println("Oops...");
-//        }
         try {
-            if (userSettings.contains(chat_id)){
-                userSettings.remove(chat_id);
-                InMemoryListRepository.writeFile(userSettings);
-            }
+            userSettingsList.remove(chat_id);
+            writeFile(userSettingsList);
+
         }catch (Exception e){
             System.out.println("User with " + chat_id + " id doesn't exist");
         }
 
     }
 
-    public static UserSettings getSetting(int chat_id) throws FileNotFoundException {
-        List<UserSettings> userSettings = InMemoryListRepository.readFile();
-        if (userSettings.contains(chat_id)) return userSettings.get(chat_id);
-        else return null;
+    public static UserSettings getSetting(int chat_id) {
+        return userSettingsList.get(chat_id);
     }
 }
