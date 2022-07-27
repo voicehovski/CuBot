@@ -1,8 +1,10 @@
 package goit3.cubot.botapi_ref;
 
-public class DigitCountSelector extends Selector {
+public class DigitCountMenu extends ButtonMenu {
 
-    public DigitCountSelector () {
+    public static final String MENU = "Digit count";
+
+    public DigitCountMenu() {
         super(
                 new ButtonAttributes [] {
                         new ButtonAttributes("2", "2", true),

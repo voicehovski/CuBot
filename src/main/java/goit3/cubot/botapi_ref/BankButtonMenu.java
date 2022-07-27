@@ -1,23 +1,26 @@
 package goit3.cubot.botapi_ref;
 
-public class BankSelector extends Selector {
+public class BankButtonMenu extends ButtonMenu {
+
+    public static final String MENU = "Select bank";
 
     public static final String NBU = "nbu";
     public static final String PRIVATBANK = "privatbank";
     public static final String MONOBANK = "monobank";
 
-    public BankSelector () {
+    public BankButtonMenu() {
         super(new ButtonAttributes [] {
                         new ButtonAttributes(PRIVATBANK, PRIVATBANK, true),
                         new ButtonAttributes(MONOBANK, MONOBANK),
                         new ButtonAttributes(NBU, NBU)
                 });
     }
-    public BankSelector (String bankName) {
+    public BankButtonMenu(String selectedBankName) {
         super(new ButtonAttributes [] {
-                new ButtonAttributes(PRIVATBANK, PRIVATBANK, true),
+                new ButtonAttributes(PRIVATBANK, PRIVATBANK),
                 new ButtonAttributes(MONOBANK, MONOBANK),
                 new ButtonAttributes(NBU, NBU)
-        });
+        }, selectedBankName);
+
     }
 }

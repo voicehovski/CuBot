@@ -1,7 +1,5 @@
 package goit3.cubot;
 
-import goit3.cubot.UserSettings;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,7 @@ public class Repository {
         return userSettings.contains(chat_id);
     }
 
-    public void add(int chat_id, UserSettings setting){
+    public void add(String chat_id, UserSettings setting){
         /*
         * Считать json из файла
         * Преобразовать в список объектов UserSettings
