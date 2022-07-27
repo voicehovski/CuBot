@@ -9,9 +9,9 @@ public class Repository {
 
 
     public static void add(int chat_id, UserSettings setting) throws Exception {
-        List<UserSettings> userSettings = InMemoryListRepository.readFile();
+        userSettingsList = InMemoryListRepository.readFile();
         try {
-            if (!userSettings.contains(chat_id)){
+            if (!userSettingsList.contains(chat_id)){
                 userSettingsList.add(setting);
                 writeFile(userSettingsList);
             }
