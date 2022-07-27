@@ -13,20 +13,18 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.util.Arrays;
-
 public class TelegramBot extends TelegramLongPollingBot {
     public static final String BANK_SELECTED = "bank selected";
     private Repository repository = new JsonFileRepository (  );
 
     @Override
     public String getBotUsername() {
-        return "test998_goit_3_bot";
+        return "goit_2022_bot";
     }
 
     @Override
     public String getBotToken() {
-        return "5506749029:AAH3aE3HW3kR7dQ0euEsMOjy8ng83vU5HSE";
+        return "5550058796:AAElAWvwt7AyIM2y4nSaZOl1rFH0iZE9Tqk";
     }
 
     @Override
@@ -39,7 +37,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             message = update .getMessage();
             if (message.hasText()) {
                 String userText = message.getText();
-                //chatMessageId = message.getChatId().toString();
+                chatMessageId = message.getChatId().toString();
                 if (userText.equals("/start")) {
                     buttonMenu = new MainMenu();
                 }
@@ -50,7 +48,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             chatMessageId = message.getChatId().toString();
             String action = callbackQuery.getData();
 
-            UserSettings userSettings = repository .getSetting(chatMessageId);
+            UserSettings userSettings = repository .getSettings(chatMessageId);
             if (userSettings == null) {
                 userSettings = UserSettings.createDefault(chatMessageId);
             }
@@ -75,6 +73,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     buttonMenu = new DigitCountMenu();
                     break;
                 case CurrencyMenu.MENU:
+                    //buttonMenu = new CurrencyMenu(userSettings.getCurrencies(), bank);
                     buttonMenu = new CurrencyMenu(userSettings.getCurrencies());
                     break;
                 case CurrencyMenu.EUR:
@@ -89,10 +88,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                 default:
                     System.out.println("Undefined");
             }
+
+            repository.add(userSettings);
         }
 
         try {
-            execute ( buttonMenu.buildMessage("Initial hallo (Привет!)", chatMessageId) );
+            execute ( buttonMenu.buildMessage(chatMessageId) );
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

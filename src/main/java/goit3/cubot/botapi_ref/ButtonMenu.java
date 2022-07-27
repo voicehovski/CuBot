@@ -37,7 +37,7 @@ public class ButtonMenu {
 
     // todo Реализовать setSelected для один/несколько, множественный/единичный. Возможно в конструкторе
 
-    public SendMessage buildMessage ( String header, String chatMessageId ) {
+    public SendMessage buildMessage ( String chatMessageId ) {
 
         List<List<InlineKeyboardButton>> bankButtons = new ArrayList<>();
         for ( ButtonAttributes buttonAttributes : buttons ) {
@@ -45,7 +45,7 @@ public class ButtonMenu {
         }
 
         return SendMessage.builder()
-                    .text(header)
+                    .text(getHeader())
                     .chatId(chatMessageId)
                     .replyMarkup(InlineKeyboardMarkup.builder().keyboard(bankButtons).build())
                     .build();
@@ -56,5 +56,9 @@ public class ButtonMenu {
                 .text(text)
                 .callbackData(callbackData)
                 .build());
+    }
+
+    public String getHeader () {
+        return "Hallo!";
     }
 }

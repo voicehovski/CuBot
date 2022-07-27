@@ -91,4 +91,14 @@ public class UserSettings {
         }
     }
 
+    @Override
+    public String toString() {
+        return "UserSettings{" +
+                "chatId='" + chatId + '\'' +
+                ", roundDigit=" + roundDigit +
+                ", bankName='" + bankName + '\'' +
+                ", reminderTime=" + reminderTime +
+                ", currencies=" + currencies +
+                '}';
+    }
 }
