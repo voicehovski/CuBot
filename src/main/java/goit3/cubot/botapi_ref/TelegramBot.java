@@ -1,6 +1,8 @@
 package goit3.cubot.botapi_ref;
 
 import goit3.cubot.Currency;
+import goit3.cubot.JsonFileRepository;
+import goit3.cubot.Repository;
 import goit3.cubot.UserSettings;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 
 public class TelegramBot extends TelegramLongPollingBot {
     public static final String BANK_SELECTED = "bank selected";
+    private Repository repository = new JsonFileRepository (  );
 
     @Override
     public String getBotUsername() {
@@ -31,17 +34,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         Message message = null;
         String chatMessageId = null;
         ButtonMenu buttonMenu = null;
-        UserSettings userSettings = null;
 
         if (update.hasMessage()) {
             message = update .getMessage();
             if (message.hasText()) {
                 String userText = message.getText();
-                chatMessageId = message.getChatId().toString();
-                //System.out.println(userText);
+                //chatMessageId = message.getChatId().toString();
                 if (userText.equals("/start")) {
                     buttonMenu = new MainMenu();
-                    userSettings = UserSettings.createDefault(chatMessageId);
                 }
             }
         } else if (update.hasCallbackQuery()) {
@@ -50,7 +50,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             chatMessageId = message.getChatId().toString();
             String action = callbackQuery.getData();
 
-            // Надо читать из репо и возвращать дефолт только в случае отсутствия
+            UserSettings userSettings = repository .getSetting(chatMessageId);
             if (userSettings == null) {
                 userSettings = UserSettings.createDefault(chatMessageId);
             }
