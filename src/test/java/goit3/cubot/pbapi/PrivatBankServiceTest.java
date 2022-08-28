@@ -2,6 +2,8 @@ package goit3.cubot.pbapi;
 
 import goit3.cubot.Currency;
 import goit3.cubot.CurrencyInfo;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -10,12 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class PrivatBankServiceTest {
     private static PrivatBankService bankService;
 
-    @org.junit.jupiter.api.BeforeAll
+    @BeforeAll
     static void setUp() {
         bankService = new PrivatBankService();
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getCurrencyExchange() {
         CurrencyInfo currencyInfo = bankService.getCurrencyByCode(Currency.USD);
         List<CurrencyInfo> currencyInfoList = bankService.getCurrencyList();
