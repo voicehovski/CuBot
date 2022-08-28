@@ -1,14 +1,9 @@
 # Default ignored files
-/.idea/shelf/
-/workspace.xml
+.gradle/
+.idea/
+build/
+gradle/
+
 gradlew
 gradlew.bat
-.gradle/
-gradle/
-build/
-.idea
-.iws
-.iml
-.ipr
-target
 .DS_STORE /src/main/resources/log
