@@ -1,0 +1,42 @@
+[
+  {
+    "chatId": "100",
+    "roundDigit": 2,
+    "bankName": "monobank",
+    "reminderTime": "12",
+    "currencies": [
+      "EUR"
+    ]
+  },
+  {
+    "chatId": "103",
+    "roundDigit": 4,
+    "bankName": "monobank",
+    "reminderTime": "18",
+    "currencies": [
+      "EUR"
+    ]
+  },
+  {
+    "chatId": "1004875019",
+    "roundDigit": 4,
+    "digit": "/digits_set_2\u003e",
+    "bankName": "/bank_set_privatbank\u003e",
+    "reminderTime": "/time_set_9\u003e",
+    "currencies": [
+      "USD",
+      "/currency_set_usd\u003e",
+      "/currency_set_eur\u003e"
+    ]
+  },
+  {
+    "chatId": "392527848",
+    "roundDigit": 2,
+    "bankName": "nbu",
+    "reminderTime": "9",
+    "currencies": [
+      "EUR",
+      "USD"
+    ]
+  }
+]
