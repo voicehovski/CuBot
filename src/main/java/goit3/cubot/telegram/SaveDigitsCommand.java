@@ -6,6 +6,6 @@ public class SaveDigitsCommand implements Command {
 
     @Override
     public boolean execute() {
-
+        return false;
     }
 }

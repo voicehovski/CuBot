@@ -6,6 +6,6 @@ public class SaveBankCommand implements Command {
 
     @Override
     public boolean execute() {
-
+        return false;
     }
 }
