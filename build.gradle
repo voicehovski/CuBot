@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
+group 'goit3.cubot'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -11,7 +11,14 @@ repositories {
 
 dependencies {
     implementation 'org.telegram:telegrambots:6.1.0'
-    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
+}
+
+test {
+    useJUnitPlatform()
 }
